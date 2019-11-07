@@ -1,5 +1,6 @@
 waitUntil {!isNil "save_is_loaded"};
 waitUntil {!isNil "KP_liberation_civ_rep"};
+waitUntil {save_is_loaded};
 
 if (KP_liberation_asymmetric_debug > 0) then {diag_log format ["[KP LIBERATION] [ASYMMETRIC] Loop spawned on: %1", debug_source];};
 
@@ -7,21 +8,21 @@ KP_liberation_asymmetric_sectors = [];
 
 while {GRLIB_endgame == 0} do {
 	private _sectors_to_remove = [];
-	
+
 	{
 		if (!(_x in blufor_sectors) || (KP_liberation_civ_rep > -25)) then {
 			_sectors_to_remove pushBack _x;
 		};
 	} forEach KP_liberation_asymmetric_sectors;
-	
+
 	KP_liberation_asymmetric_sectors = KP_liberation_asymmetric_sectors - _sectors_to_remove;
 
-	if (KP_liberation_civ_rep <= -25) then {		
+	if (KP_liberation_civ_rep <= -25) then {
 		{
 			private _sector = _x;
 			private _blocked = false;
 			private _units_at_sector = [getmarkerpos _sector, GRLIB_sector_size, GRLIB_side_friendly] call F_getUnitsCount;
-			
+
 			{
 				if ((_x select 0) == _sector) exitWith {
 					if ((((_x select 1) + 1800) < time) && (_units_at_sector == 0)) then {
@@ -33,7 +34,7 @@ while {GRLIB_endgame == 0} do {
 					};
 				};
 			} forEach asymm_blocked_sectors;
-			
+
 			if ((_units_at_sector > 0) && !(_sector in KP_liberation_asymmetric_sectors) && !_blocked) then {
 				KP_liberation_asymmetric_sectors pushBack _sector;
 
@@ -54,7 +55,7 @@ while {GRLIB_endgame == 0} do {
 			if (!(_units_at_sector > 0) && (_sector in KP_liberation_asymmetric_sectors)) then {
 				KP_liberation_asymmetric_sectors = KP_liberation_asymmetric_sectors - [_sector];
 			};
-		} forEach ([(sectors_capture + sectors_bigtown), {_x in blufor_sectors}] call BIS_fnc_conditionalSelect);
+		} forEach ((sectors_capture + sectors_bigtown) select {_x in blufor_sectors});
 	};
 	publicVariable "KP_liberation_asymmetric_sectors";
 	publicVariable "asymm_blocked_sectors";

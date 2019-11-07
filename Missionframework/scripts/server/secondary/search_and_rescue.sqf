@@ -1,5 +1,5 @@
 
-private _spawn_marker = [ 3000, 999999, false ] call F_findOpforSpawnPoint;
+private _spawn_marker = [ 2000, 999999, false ] call F_findOpforSpawnPoint;
 if ( _spawn_marker == "" ) exitWith { diag_log "[KP LIBERATION] [ERROR] Could not find position for search and rescue mission"; };
 used_positions pushbackUnique _spawn_marker;
 
@@ -104,4 +104,4 @@ stats_secondary_objectives = stats_secondary_objectives + 1;
 
 GRLIB_secondary_in_progress = -1; publicVariable "GRLIB_secondary_in_progress";
 sleep 1;
-trigger_server_save = true;
+doSaveTrigger = true;
